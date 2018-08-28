@@ -1,0 +1,16 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/users": {
+            "get": {
+                "summary": "Display a user listing.",
+                "operationId": "App\\Http\\Controllers\\UsersController::index",
+                "responses": {
+                    "200": {
+                        "description": "Users Index"
+                    }
+                }
+            }
+        }
+    }
+}

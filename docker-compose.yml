@@ -1,7 +1,5 @@
 version: '2'
 services:
-
-  # The Application
   app:
     build:
       context: ./
@@ -12,8 +10,6 @@ services:
     environment:
       - "DB_PORT=3306"
       - "DB_HOST=database"
-
-  # The Web Server
   web:
     build:
       context: ./
@@ -23,8 +19,6 @@ services:
       - app
     ports:
       - 8080:80
-
-  # The Database
   database:
     image: mysql:5.7.23
     volumes:
@@ -35,7 +29,17 @@ services:
       - "MYSQL_PASSWORD=secret"
       - "MYSQL_ROOT_PASSWORD=secret"
     ports:
-        - "33061:3306"
+        - 33061:3306
+  swagger:
+    image: swaggerapi/swagger-ui:latest
+    volumes:
+      - ./:/foo
+    ports:
+      - 8888:8080
+    environment:
+      - "API_URL=http://localhost:8080/swagger.json"
+    depends_on:
+      - app
 
 volumes:
   dbdata:

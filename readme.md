@@ -3,7 +3,7 @@
 ## Architecture
 The service consists of three containers each with its own responsibility. One is responsible for serving the application, another for providing the database and finally a web server to proxy traffic to the application.
 
-The Lumen framework is used to form the web application which gives us routing, models, controllers and much more. Tests are written as per the built-in test framework.
+The Lumen framework is used to form the web application which gives us routing, models, controllers and much more. Functional tests are written per the built-in test framework.
 
 ## Set up guide
 ### Create configuration file

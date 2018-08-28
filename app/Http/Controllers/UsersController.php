@@ -10,6 +10,11 @@ class UsersController extends Controller
 {
     /**
      * Display a user listing.
+     *
+     * @OA\Get(
+     *     path="/users",
+     *     @OA\Response(response="200", description="Users Index")
+     * )
      * 
      * @return Illuminate\Database\Eloquent\Collection
      */
