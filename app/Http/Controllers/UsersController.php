@@ -36,7 +36,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Display a single user.
+     * Display a user.
      * 
      * @param  int $id
      * @return App\User
@@ -49,7 +49,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Update a single user.
+     * Update a user.
      * 
      * @param  Request $request
      * @param  int  $id
@@ -72,5 +72,23 @@ class UsersController extends Controller
         $user->save();
 
         return $user;
+    }
+
+    /**
+     * Delete a user.
+     * 
+     * @param  int $id
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        $user = User::find($id);
+
+        if($user === null)
+            return response()->json(['Error' => 'Not Found'], 400);
+
+        $user->delete();
+
+        return response()->json(null, 204);
     }
 }

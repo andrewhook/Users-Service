@@ -111,4 +111,19 @@ class UsersTest extends TestCase
             'family_name' => ['The family name field is required.']
         ]), $response->getContent());
     }
+
+    /**
+     * Test we can delete a user.
+     * 
+     * @return void
+     */
+    public function test_it_deletes_a_user()
+    {
+        $user = User::create(['email' => 'me@andrewhook.uk', 'given_name' => 'Andrew', 'family_name' => 'Hook']);
+
+        $response = $this->call('DELETE', sprintf('/users/%d', $user->id));
+
+        $this->assertEquals(204, $response->status());
+        $this->assertEquals(0, User::count());
+    }    
 }
