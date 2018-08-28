@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UsersController extends Controller
 {
@@ -35,7 +36,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Displays a single user.
+     * Display a single user.
      * 
      * @param  int $id
      * @return App\User
@@ -45,5 +46,31 @@ class UsersController extends Controller
         $user = User::find($id);
 
         return $user !== null ? $user : response()->json(['Error' => 'Not Found'], 404);
+    }
+
+    /**
+     * Update a single user.
+     * 
+     * @param  Request $request
+     * @param  int  $id
+     * @return App\User
+     */
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'email' => ['required', Rule::unique('users')->ignore($id)],
+            'given_name' => 'required',
+            'family_name' => 'required',
+        ]);
+
+        $user = User::find($id);
+
+        if($user === null)
+            return response()->json(['Error' => 'Not Found'], 400);
+
+        $user->fill($request->all());
+        $user->save();
+
+        return $user;
     }
 }

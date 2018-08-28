@@ -59,7 +59,7 @@ class UsersTest extends TestCase
         $response = $this->call('POST', '/users', $user);
 
         $this->assertEquals(422, $response->status());
-        $this->assertEquals(json_encode(['email' => ['The email field is required.']]), $response->getContent());
+        $this->assertJsonStringEqualsJsonString(json_encode(['email' => ['The email field is required.']]), $response->getContent());
     }
 
     /**
@@ -69,11 +69,46 @@ class UsersTest extends TestCase
      */
     public function test_it_returns_a_single_user()
     {
-        $user = User::insert(['email' => 'me@andrewhook.uk', 'given_name' => 'Andrew', 'family_name' => 'Hook']);
+        $user = User::create(['email' => 'me@andrewhook.uk', 'given_name' => 'Andrew', 'family_name' => 'Hook']);
 
         $response = $this->call('GET', '/users/1');
 
         $this->assertEquals(200, $response->status());
-        $this->assertEquals($user->toJson(), $response->getContent());
+        $this->assertJsonStringEqualsJsonString($user->toJson(), $response->getContent());
+    }
+
+    /**
+     * Test we can update a user.
+     * 
+     * @return void
+     */
+    public function test_it_updates_a_user()
+    {
+        $user = User::create(['email' => 'me@andrewhook.uk', 'given_name' => 'Andrew', 'family_name' => 'Hook']);
+
+        $update = ['email' => 'andy@andrewhook.uk', 'given_name' => 'A', 'family_name' => 'H'];
+
+        $this->json('PUT', sprintf('/users/%d', $user->id), $update)
+             ->seeJson($update);
+    }
+
+    /**
+     * Test we don't update a user if validation fails.
+     * 
+     * @return void
+     */
+    public function test_it_doesnt_update_a_user_if_validation_fails()
+    {
+        $user = User::create(['email' => 'me@andrewhook.uk', 'given_name' => 'Andrew', 'family_name' => 'Hook']);
+
+        $update = ['email' => 'andy@andrewhook.uk'];
+
+        $response = $this->call('PUT', sprintf('/users/%d', $user->id), $update);
+
+        $this->assertEquals(422, $response->status());
+        $this->assertJsonStringEqualsJsonString(json_encode([
+            'given_name' => ['The given name field is required.'],
+            'family_name' => ['The family name field is required.']
+        ]), $response->getContent());
     }
 }
