@@ -33,4 +33,17 @@ class UsersController extends Controller
 
         return User::create($request->all());
     }
+
+    /**
+     * Displays a single user.
+     * 
+     * @param  int $id
+     * @return App\User
+     */
+    public function show($id)
+    {
+        $user = User::find($id);
+
+        return $user !== null ? $user : response()->json(['Error' => 'Not Found'], 404);
+    }
 }
